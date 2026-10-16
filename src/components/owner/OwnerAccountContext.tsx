@@ -114,6 +114,12 @@ export function formatOwnerAddress(place: Pick<OwnerPlace, 'street' | 'postalCod
 
 const STORAGE_KEY = 'feel-owner-v2'
 const DEFAULT_IMAGE = '/inspiration-cabine.jpg'
+/** Fiche démo préremplie dans « Mes fiches » */
+export const DEMO_PLACE_ID = 'owner-place-demo'
+
+export function isDemoPlace(place: Pick<OwnerPlace, 'id'>): boolean {
+  return place.id === DEMO_PLACE_ID
+}
 
 const WEEKDAYS: WeekDay[] = [
   'monday',
@@ -346,8 +352,143 @@ const DEMO_DURATIONS = [60, 90, 120, 60, 180, 60, 120, 90, 60, 120] as const
 /** Jours cibles : 2 RDV le 1er jour ouvert, puis un RDV par jour espacé */
 const DEMO_DAY_OFFSETS = [1, 1, 3, 5, 7, 9, 12, 15, 18, 22] as const
 
+const DEMO_MAX_CLIENTS = 10
+
+const DEMO_COVER =
+  'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=1200&q=80'
+const DEMO_MEDIA = [
+  DEMO_COVER,
+  'https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&w=800&q=80',
+  'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=800&q=80',
+  'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=80',
+] as const
+
 function isDemoBooking(b: Pick<OwnerBooking, 'id'>): boolean {
   return b.id.startsWith('demo-')
+}
+
+/** Lieu fictif complet pour découvrir l’espace propriétaire */
+export function buildDemoOwnerPlace(): OwnerPlace {
+  const specialties: CategoryLabel[] = [
+    'Coiffeur',
+    'Head spa',
+    'Onglerie',
+    'Massage',
+  ]
+  const slots = defaultSlotsForOwnerPlace()
+  const pricing = defaultPricing()
+  const pricingBySpecialty: Partial<Record<CategoryLabel, PricingGrid>> = {
+    Coiffeur: normalizePricing({
+      hour: 42,
+      hours2: 78,
+      hours3: 110,
+      hours4: 138,
+    }),
+    'Head spa': normalizePricing({
+      hour: 48,
+      hours2: 88,
+      hours3: 124,
+      hours4: 152,
+    }),
+    Onglerie: normalizePricing({
+      hour: 36,
+      hours2: 66,
+      hours3: 94,
+      hours4: 118,
+    }),
+    Massage: normalizePricing({
+      hour: 45,
+      hours2: 82,
+      hours3: 116,
+      hours4: 144,
+    }),
+  }
+  const slotsBySpecialty: Partial<Record<CategoryLabel, AvailSlot[]>> = {}
+  for (const spec of specialties) slotsBySpecialty[spec] = slots
+
+  const todayKey = (() => {
+    const d = new Date()
+    d.setDate(d.getDate() + 4)
+    const y = d.getFullYear()
+    const m = String(d.getMonth() + 1).padStart(2, '0')
+    const day = String(d.getDate()).padStart(2, '0')
+    return `${y}-${m}-${day}`
+  })()
+
+  return {
+    id: DEMO_PLACE_ID,
+    name: 'DEMO · Atelier Lumière',
+    street: '18 rue des Martyrs',
+    postalCode: '75009',
+    city: 'Paris',
+    email: 'demo@atelier-lumiere.fr',
+    phone: '01 42 00 00 00',
+    emailVisible: true,
+    phoneVisible: true,
+    description:
+      'Centre bien-être fictif pour tester STUDIØ.\n\nCabines lumineuses, accueil simple, et planning partagé entre plusieurs studios. Toutes les données sont inventées.',
+    specialties,
+    descriptionBySpecialty: {
+      Coiffeur:
+        'Studio coiffure avec bac lavant et lumière naturelle. Idéal demi-journées ou journées complètes.',
+      'Head spa':
+        'Cabine calme dédiée au head spa : fauteuil inclinable, diffuseur, linge fourni.',
+      Onglerie:
+        'Table manucure / pédicure, aspiration, stérilisation. Créneaux flexibles.',
+      Massage:
+        'Salle massage 12 m², table pro, musique douce. Parfait pour séances 1 à 2 h.',
+    },
+    postBookingMessageBySpecialty: {
+      Coiffeur: 'Digicode entrée : 4521# — 2ᵉ étage, studio rose.',
+      'Head spa': 'Sonnette Atelier Lumière, puis rappelez au 06 12 00 00 01.',
+      Onglerie: 'Code boîte à clés : 7788 — table près de la fenêtre.',
+      Massage: 'Accueil au RDC, casier n°3 pour vos affaires.',
+    },
+    pricing,
+    pricingBySpecialty,
+    media: DEMO_MEDIA.map((src, i) => ({
+      id: `${DEMO_PLACE_ID}-media-${i}`,
+      src,
+      specialty: i === 0 ? undefined : specialties[(i - 1) % specialties.length],
+    })),
+    slots,
+    slotsBySpecialty,
+    slotExceptions: [
+      {
+        date: todayKey,
+        minutes: 14 * 60,
+        specialty: 'Coiffeur',
+        note: 'Travaux peinture (démo)',
+      },
+      {
+        date: todayKey,
+        minutes: 14 * 60 + 30,
+        specialty: 'Coiffeur',
+        note: 'Travaux peinture (démo)',
+      },
+    ],
+    events: [
+      {
+        id: `${DEMO_PLACE_ID}-event-1`,
+        title: 'Soirée découverte Head spa',
+        description:
+          'Atelier découverte 45 min pour les pros partenaires (données fictives).',
+      },
+      {
+        id: `${DEMO_PLACE_ID}-event-2`,
+        title: 'Formation colorimétrie',
+        description: 'Demi-journée formation interne — places limitées.',
+      },
+    ],
+    image: DEMO_COVER,
+    createdAt: '2026-01-01T10:00:00.000Z',
+  }
+}
+
+function ensureDemoPlace(places: OwnerPlace[]): OwnerPlace[] {
+  const demo = buildDemoOwnerPlace()
+  const without = places.filter((p) => !isDemoPlace(p))
+  return [demo, ...without]
 }
 
 function slotsForOwnerSpecialty(
@@ -574,12 +715,12 @@ function pickNovemberDemos(
   return out
 }
 
-/** RDV démo / lieu : étalés + 4 ciblés en novembre (Coiffeur / Épilation) */
+/** RDV démo : uniquement sur la fiche DEMO, max 10 clients répartis */
 function buildDemoBookings(places: OwnerPlace[]): OwnerBooking[] {
   const today = startOfDay(new Date())
   const out: OwnerBooking[] = []
 
-  for (const place of places) {
+  for (const place of places.filter(isDemoPlace)) {
     const specs = place.specialties
     if (specs.length === 0) continue
     const placeName = place.name.trim() || 'Lieu'
@@ -591,6 +732,7 @@ function buildDemoBookings(places: OwnerPlace[]): OwnerBooking[] {
     ]
 
     for (let i = 0; i < DEMO_DAY_OFFSETS.length; i += 1) {
+      if (picked.length >= DEMO_MAX_CLIENTS) break
       const specialty = specs[i % specs.length]!
       const durationMin = DEMO_DURATIONS[i % DEMO_DURATIONS.length]!
       const slot = findDemoSlot(
@@ -613,23 +755,17 @@ function buildDemoBookings(places: OwnerPlace[]): OwnerBooking[] {
       picked.push(slot)
     }
 
-    const baseCount = picked.length
-    const novemberPicks = pickNovemberDemos(place, taken)
-    picked.push(...novemberPicks)
+    if (picked.length < DEMO_MAX_CLIENTS) {
+      picked.push(
+        ...pickNovemberDemos(place, taken).slice(
+          0,
+          DEMO_MAX_CLIENTS - picked.length,
+        ),
+      )
+    }
 
-    const novNames = [
-      'Inès Lefèvre',
-      'Thomas Caron',
-      'Chloé Mercier',
-      'Antoine Vidal',
-    ]
-
-    picked.forEach((c, i) => {
-      const novIndex = i - baseCount
-      const proName =
-        novIndex >= 0
-          ? novNames[novIndex % novNames.length]!
-          : DEMO_CLIENTS[i % DEMO_CLIENTS.length]!
+    picked.slice(0, DEMO_MAX_CLIENTS).forEach((c, i) => {
+      const proName = DEMO_CLIENTS[i % DEMO_CLIENTS.length]!
       const bookingId = `demo-${place.id}-${i + 1}`
       out.push({
         id: bookingId,
@@ -695,20 +831,32 @@ function loadStored(): StoredOwner {
     const raw = localStorage.getItem(STORAGE_KEY)
     if (!raw) {
       localStorage.removeItem('feel-owner-v1')
-      return { profile: EMPTY_OWNER_PROFILE, places: [], bookings: [] }
+      const places = ensureDemoPlace([])
+      return {
+        profile: EMPTY_OWNER_PROFILE,
+        places,
+        bookings: [],
+      }
     }
     const parsed = JSON.parse(raw) as Partial<StoredOwner>
-    return {
-      profile: normalizeProfile(parsed.profile),
-      places: Array.isArray(parsed.places)
+    const places = ensureDemoPlace(
+      Array.isArray(parsed.places)
         ? parsed.places.map((p) =>
             normalizePlace(p as OwnerPlace & { address?: string }),
           )
         : [],
+    )
+    return {
+      profile: normalizeProfile(parsed.profile),
+      places,
       bookings: Array.isArray(parsed.bookings) ? parsed.bookings : [],
     }
   } catch {
-    return { profile: EMPTY_OWNER_PROFILE, places: [], bookings: [] }
+    return {
+      profile: EMPTY_OWNER_PROFILE,
+      places: ensureDemoPlace([]),
+      bookings: [],
+    }
   }
 }
 
@@ -920,14 +1068,16 @@ export function OwnerAccountProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const removePlace = useCallback((placeId: string) => {
+    if (placeId === DEMO_PLACE_ID) return
     setPlaces((list) => list.filter((p) => p.id !== placeId))
     setBookings((list) => list.filter((b) => b.placeId !== placeId))
   }, [])
 
   const resetAccount = useCallback(() => {
+    const demo = buildDemoOwnerPlace()
     setProfile(EMPTY_OWNER_PROFILE)
-    setPlaces([])
-    setBookings([])
+    setPlaces([demo])
+    setBookings(buildDemoBookings([demo]))
     localStorage.removeItem(STORAGE_KEY)
     localStorage.removeItem('feel-owner-v1')
   }, [])

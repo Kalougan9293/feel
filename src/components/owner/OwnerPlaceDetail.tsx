@@ -2,7 +2,11 @@ import { useMemo, useState } from 'react'
 import type { CategoryLabel } from '../../data/categories'
 import { PlaceDetail } from '../pro/PlaceDetail'
 import '../pro/ProAccueil.css'
-import { useOwnerAccount, type OwnerPlace } from './OwnerAccountContext'
+import {
+  isDemoPlace,
+  useOwnerAccount,
+  type OwnerPlace,
+} from './OwnerAccountContext'
 import {
   OwnerPlaceEditSheet,
   ReglagesButton,
@@ -53,13 +57,15 @@ export function OwnerPlaceDetail({ place, onBack }: Props) {
           <div className="pro-home__detail">
             <div className="owner-detail__toolbar">
               <span className="owner-detail__toolbar-spacer" aria-hidden />
-              <button
-                type="button"
-                className="owner-detail__delete-quiet"
-                onClick={handleRemove}
-              >
-                Supprimer
-              </button>
+              {!isDemoPlace(place) ? (
+                <button
+                  type="button"
+                  className="owner-detail__delete-quiet"
+                  onClick={handleRemove}
+                >
+                  Supprimer
+                </button>
+              ) : null}
             </div>
 
             <PlaceDetail

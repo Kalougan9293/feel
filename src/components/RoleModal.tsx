@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import './RoleModal.css'
 
 export type UserRole = 'proprietaire' | 'professionnel'
@@ -23,34 +23,11 @@ const CHOICES = [
   },
 ]
 
-const OWNER_AUTH = [
-  {
-    id: 'login' as const,
-    label: 'Se connecter',
-    hint: 'J’ai déjà un compte propriétaire',
-  },
-  {
-    id: 'first' as const,
-    label: 'Première fois ?',
-    hint: 'Créer mon espace et commencer',
-  },
-]
-
-type Step = 'role' | 'owner-auth'
-
 export function RoleModal({ open, onClose, onSelect }: Props) {
-  const [step, setStep] = useState<Step>('role')
-
   useEffect(() => {
-    if (!open) {
-      setStep('role')
-      return
-    }
+    if (!open) return
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        if (step === 'owner-auth') setStep('role')
-        else onClose()
-      }
+      if (e.key === 'Escape') onClose()
     }
     document.body.style.overflow = 'hidden'
     window.addEventListener('keydown', onKey)
@@ -58,12 +35,7 @@ export function RoleModal({ open, onClose, onSelect }: Props) {
       document.body.style.overflow = ''
       window.removeEventListener('keydown', onKey)
     }
-  }, [open, onClose, step])
-
-  function finishOwner() {
-    onSelect?.('proprietaire')
-    onClose()
-  }
+  }, [open, onClose])
 
   return (
     <AnimatePresence>
@@ -101,91 +73,32 @@ export function RoleModal({ open, onClose, onSelect }: Props) {
               ×
             </button>
 
-            <AnimatePresence mode="wait" initial={false}>
-              {step === 'role' ? (
-                <motion.div
-                  key="role"
-                  initial={{ opacity: 0, x: -8 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 8 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <p className="role-modal__eyebrow">STUDIØ</p>
-                  <h2 id="role-modal-title" className="role-modal__title">
-                    Vous êtes ?
-                  </h2>
-                  <p className="role-modal__lead">
-                    Choisissez votre profil pour continuer.
-                  </p>
+            <p className="role-modal__eyebrow">STUDIØ</p>
+            <h2 id="role-modal-title" className="role-modal__title">
+              Vous êtes ?
+            </h2>
+            <p className="role-modal__lead">
+              Choisissez votre profil pour continuer.
+            </p>
 
-                  <div className="role-modal__choices">
-                    {CHOICES.map((choice) => (
-                      <button
-                        key={choice.id}
-                        type="button"
-                        className="role-modal__choice"
-                        onClick={() => {
-                          if (choice.id === 'proprietaire') {
-                            setStep('owner-auth')
-                            return
-                          }
-                          onSelect?.(choice.id)
-                          onClose()
-                        }}
-                      >
-                        <span className="role-modal__choice-label">
-                          {choice.label}
-                        </span>
-                        <span className="role-modal__choice-hint">
-                          {choice.hint}
-                        </span>
-                      </button>
-                    ))}
-                  </div>
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="owner-auth"
-                  initial={{ opacity: 0, x: 8 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -8 }}
-                  transition={{ duration: 0.2 }}
+            <div className="role-modal__choices">
+              {CHOICES.map((choice) => (
+                <button
+                  key={choice.id}
+                  type="button"
+                  className="role-modal__choice"
+                  onClick={() => {
+                    onSelect?.(choice.id)
+                    onClose()
+                  }}
                 >
-                  <button
-                    type="button"
-                    className="role-modal__back"
-                    onClick={() => setStep('role')}
-                  >
-                    ← Retour
-                  </button>
-                  <p className="role-modal__eyebrow">PROPRIÉTAIRE</p>
-                  <h2 id="role-modal-title" className="role-modal__title">
-                    Votre espace
-                  </h2>
-                  <p className="role-modal__lead">
-                    Connectez-vous ou créez votre compte.
-                  </p>
-
-                  <div className="role-modal__choices">
-                    {OWNER_AUTH.map((choice) => (
-                      <button
-                        key={choice.id}
-                        type="button"
-                        className="role-modal__choice"
-                        onClick={finishOwner}
-                      >
-                        <span className="role-modal__choice-label">
-                          {choice.label}
-                        </span>
-                        <span className="role-modal__choice-hint">
-                          {choice.hint}
-                        </span>
-                      </button>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+                  <span className="role-modal__choice-label">
+                    {choice.label}
+                  </span>
+                  <span className="role-modal__choice-hint">{choice.hint}</span>
+                </button>
+              ))}
+            </div>
           </motion.div>
         </motion.div>
       )}

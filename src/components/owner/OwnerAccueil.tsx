@@ -1,6 +1,10 @@
 import { useMemo, useState, type CSSProperties } from 'react'
 import { colorOf } from '../../data/categories'
-import { useOwnerAccount, type OwnerPlace } from './OwnerAccountContext'
+import {
+  isDemoPlace,
+  useOwnerAccount,
+  type OwnerPlace,
+} from './OwnerAccountContext'
 import { OwnerOnboardingWizard } from './OwnerOnboardingWizard'
 import { ownerPlaceToPlace } from './ownerPlaceToPlace'
 import '../pro/ProAccueil.css'
@@ -65,6 +69,7 @@ export function OwnerAccueil({ onOpenPlace }: Props) {
                     area={view.address}
                     image={view.image}
                     specialties={view.specialties}
+                    demo={isDemoPlace(owner)}
                     onOpen={() => onOpenPlace(owner.id)}
                     onDelete={() => confirmRemove(owner)}
                   />
@@ -120,6 +125,7 @@ function OwnerPlaceCard({
   area,
   image,
   specialties,
+  demo = false,
   onOpen,
   onDelete,
 }: {
@@ -128,11 +134,12 @@ function OwnerPlaceCard({
   area: string
   image: string
   specialties: OwnerPlace['specialties']
+  demo?: boolean
   onOpen: () => void
   onDelete: () => void
 }) {
   return (
-    <div className="owner-tile">
+    <div className={`owner-tile${demo ? ' is-demo' : ''}`}>
       <button
         type="button"
         className="owner-tile__open"
@@ -142,7 +149,9 @@ function OwnerPlaceCard({
         <div
           className="owner-tile__media"
           style={{ backgroundImage: `url(${image})` }}
-        />
+        >
+          {demo ? <span className="owner-tile__demo-badge">DEMO</span> : null}
+        </div>
         <div className="owner-tile__body">
           <h2 className="owner-tile__name">{name}</h2>
           <p className="owner-tile__area">{area}</p>
@@ -162,52 +171,55 @@ function OwnerPlaceCard({
             ))}
           </ul>
           <p className="owner-tile__meta">
-            {owner.specialties.length} studio
-            {owner.specialties.length > 1 ? 's' : ''}
+            {demo
+              ? 'Fiche exemple · 10 clients fictifs'
+              : `${owner.specialties.length} studio${owner.specialties.length > 1 ? 's' : ''}`}
           </p>
         </div>
       </button>
-      <button
-        type="button"
-        className="owner-place-card__trash"
-        aria-label={`Supprimer ${name}`}
-        title="Supprimer"
-        onClick={(e) => {
-          e.stopPropagation()
-          onDelete()
-        }}
-      >
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path
-            d="M5 7h14"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.7"
-            strokeLinecap="round"
-          />
-          <path
-            d="M9.5 7V5.8A1.8 1.8 0 0 1 11.3 4h1.4A1.8 1.8 0 0 1 14.5 5.8V7"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.7"
-            strokeLinecap="round"
-          />
-          <path
-            d="M7.5 7v11.2A1.8 1.8 0 0 0 9.3 20h5.4a1.8 1.8 0 0 0 1.8-1.8V7"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.7"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M10.2 11v5.2M13.8 11v5.2"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.7"
-            strokeLinecap="round"
-          />
-        </svg>
-      </button>
+      {!demo ? (
+        <button
+          type="button"
+          className="owner-place-card__trash"
+          aria-label={`Supprimer ${name}`}
+          title="Supprimer"
+          onClick={(e) => {
+            e.stopPropagation()
+            onDelete()
+          }}
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M5 7h14"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.7"
+              strokeLinecap="round"
+            />
+            <path
+              d="M9.5 7V5.8A1.8 1.8 0 0 1 11.3 4h1.4A1.8 1.8 0 0 1 14.5 5.8V7"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.7"
+              strokeLinecap="round"
+            />
+            <path
+              d="M7.5 7v11.2A1.8 1.8 0 0 0 9.3 20h5.4a1.8 1.8 0 0 0 1.8-1.8V7"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.7"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M10.2 11v5.2M13.8 11v5.2"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.7"
+              strokeLinecap="round"
+            />
+          </svg>
+        </button>
+      ) : null}
     </div>
   )
 }
