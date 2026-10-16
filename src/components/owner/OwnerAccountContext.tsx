@@ -8,6 +8,7 @@ import {
   type ReactNode,
 } from 'react'
 import {
+  TIME_STEP_MINUTES,
   exceptionForSlot,
   formatMinutes,
   startOfDay,
@@ -132,12 +133,14 @@ export function defaultPricing(): PricingGrid {
   })
 }
 
-/** Créneaux hebdo ouverts (lun–sam 9h–18h) */
+/** Créneaux hebdo ouverts (lun–sam 9h–18h, pas de 30 min) */
 export function defaultSlotsForOwnerPlace(): AvailSlot[] {
   const slots: AvailSlot[] = []
+  const start = 9 * 60
+  const end = 18 * 60
   for (const day of WEEKDAYS) {
-    for (let h = 9; h <= 18; h += 1) {
-      slots.push({ day, minutes: h * 60 })
+    for (let m = start; m <= end; m += TIME_STEP_MINUTES) {
+      slots.push({ day, minutes: m })
     }
   }
   return slots

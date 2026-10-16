@@ -1021,19 +1021,20 @@ function PlaceDetailView({
                 const isPast = startOfDay(cell) < startOfDay(now)
                 const inFilter = dateMatchesDayFilter(cell, calDay, now)
                 const weekly = weeklyMinutesOnDate(activeSlots, cell)
-                const starts = inFilter
-                  ? startSlotsForDuration(
-                      openSlotsOnDate(
-                        place.id,
-                        activeSlots,
-                        cell,
-                        now,
-                        slotOptions,
-                      ),
-                      durationMin,
-                      calRange,
+                const openMins = inFilter
+                  ? openSlotsOnDate(
+                      place.id,
+                      activeSlots,
+                      cell,
+                      now,
+                      slotOptions,
                     )
                   : []
+                // Proprio : couleur = créneaux encore libres (sans filtre durée résa).
+                // Pro : couleur = débuts possibles pour la durée choisie.
+                const starts = manageDaySlots
+                  ? openMins
+                  : startSlotsForDuration(openMins, durationMin, calRange)
                 const level = isPast || !inFilter ? 'none' : slotsLevel(starts)
                 const selected =
                   selectedInViewedMonth && sameDay(cell, selectedDay)
