@@ -1,0 +1,123 @@
+.pro-page {
+  min-height: 100svh;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+}
+
+.pro-page__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.15rem clamp(1.25rem, 4vw, 2.75rem);
+  z-index: 40;
+}
+
+.pro-page__brand {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.34em;
+  text-indent: 0.34em;
+  color: var(--ink);
+  flex-shrink: 0;
+}
+
+.pro-page__header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.pro-page__nav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid rgba(31, 27, 23, 0.55);
+  border-radius: 999px;
+  padding: 0.5rem 0.95rem;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  color: var(--ink);
+  cursor: pointer;
+  transition: color 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+}
+
+.pro-page__nav-btn:hover,
+.pro-page__nav-btn.is-active {
+  background: color-mix(in srgb, var(--ink) 8%, #fff);
+  border-color: var(--ink);
+}
+
+.pro-page__profile {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1.5px solid rgba(31, 27, 23, 0.55);
+  border-radius: 999px;
+  padding: 0.5rem 0.7rem 0.5rem 1.05rem;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--ink);
+  cursor: pointer;
+  transition: color 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+}
+
+.pro-page__profile:hover,
+.pro-page__profile.is-active {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--ivory-soft);
+}
+
+@media (max-width: 720px) {
+  .pro-page__nav-btn {
+    padding: 0.45rem 0.7rem;
+    font-size: 0.72rem;
+  }
+}
+
+.pro-page__profile-icon {
+  display: grid;
+  place-items: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  color: var(--ink);
+}
+
+.pro-page__profile-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.pro-page__main {
+  flex: 1;
+  min-height: 0;
+  padding-bottom: 2rem;
+}
+
+@media (max-width: 900px) {
+  .pro-page__header {
+    padding: 1rem 1.1rem;
+  }
+
+  .pro-page__brand {
+    font-size: 0.82rem;
+    letter-spacing: 0.28em;
+    text-indent: 0.28em;
+  }
+
+  .pro-page__main {
+    padding-bottom: 1.5rem;
+  }
+}

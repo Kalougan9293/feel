@@ -1,0 +1,380 @@
+.page {
+  min-height: 100svh;
+  background: transparent;
+}
+
+/* ——— Nav ——— */
+.nav {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem clamp(1.25rem, 4vw, 2.75rem);
+  pointer-events: none;
+}
+
+.nav a,
+.nav button {
+  pointer-events: auto;
+}
+
+.nav__brand {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.34em;
+  text-indent: 0.34em;
+  color: var(--ink);
+}
+
+.nav__login {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--ink);
+  padding: 0.5rem 1.05rem;
+  border: 1.5px solid rgba(31, 27, 23, 0.55);
+  border-radius: 999px;
+  background: transparent;
+  transition: color 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+}
+
+.nav__login:hover {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--ivory-soft);
+}
+
+/* ——— Hero ——— */
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+  background: transparent;
+  overflow: visible;
+}
+
+.hero__copy {
+  position: relative;
+  z-index: 2;
+  width: min(960px, 92vw);
+  margin: 0 auto;
+  padding: clamp(7rem, 14vh, 9rem) 0 0;
+  text-align: center;
+}
+
+.hero__map {
+  position: relative;
+  z-index: 1;
+  margin-top: 1.35rem;
+  overflow: visible;
+}
+
+.hero__title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.75rem, 4vw, 3rem);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  margin: 0 auto 1rem;
+  white-space: nowrap;
+}
+
+.hero__subtitle {
+  font-size: clamp(1.05rem, 1.9vw, 1.25rem);
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: 0.01em;
+  color: var(--ink);
+  opacity: 0.78;
+  max-width: 38em;
+  margin: 0 auto 1.85rem;
+}
+
+.hero__cta {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 0.95rem 1.8rem;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--ivory-soft);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: 0 14px 34px rgba(31, 27, 23, 0.16);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hero__cta::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    110deg,
+    transparent 25%,
+    rgba(255, 255, 255, 0.18) 45%,
+    transparent 65%
+  );
+  transform: translateX(-120%);
+  animation: ctaSheen 4.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.hero__cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 40px rgba(31, 27, 23, 0.2);
+}
+
+@keyframes ctaSheen {
+  0%,
+  55% {
+    transform: translateX(-120%);
+  }
+  75%,
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+.hero__tags {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.65rem;
+  margin: 1.5rem auto 0;
+  max-width: 42rem;
+}
+
+.hero__tags li {
+  animation: tagFloat 4.2s ease-in-out infinite;
+}
+
+.hero__tags li:nth-child(1) { animation-delay: 0s; }
+.hero__tags li:nth-child(2) { animation-delay: 0.35s; }
+.hero__tags li:nth-child(3) { animation-delay: 0.7s; }
+.hero__tags li:nth-child(4) { animation-delay: 1.05s; }
+.hero__tags li:nth-child(5) { animation-delay: 1.4s; }
+.hero__tags li:nth-child(6) { animation-delay: 1.75s; }
+.hero__tags li:nth-child(7) { animation-delay: 2.1s; }
+.hero__tags li:nth-child(8) { animation-delay: 2.45s; }
+.hero__tags li:nth-child(9) { animation-delay: 2.8s; }
+
+.hero__tag {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 0.6rem 1.15rem;
+  border-radius: 999px;
+  border: 1px solid rgba(31, 27, 23, 0.08);
+  background: color-mix(in srgb, var(--tag-color) 38%, #fff7f5);
+  box-shadow:
+    0 4px 14px rgba(31, 27, 23, 0.06),
+    0 0 0 0 color-mix(in srgb, var(--tag-color) 28%, transparent);
+  animation: tagGlow 3.6s ease-in-out infinite;
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
+}
+
+.hero__tags li:nth-child(1) .hero__tag { animation-delay: 0s; }
+.hero__tags li:nth-child(2) .hero__tag { animation-delay: 0.4s; }
+.hero__tags li:nth-child(3) .hero__tag { animation-delay: 0.8s; }
+.hero__tags li:nth-child(4) .hero__tag { animation-delay: 1.2s; }
+.hero__tags li:nth-child(5) .hero__tag { animation-delay: 1.6s; }
+.hero__tags li:nth-child(6) .hero__tag { animation-delay: 2s; }
+.hero__tags li:nth-child(7) .hero__tag { animation-delay: 2.4s; }
+.hero__tags li:nth-child(8) .hero__tag { animation-delay: 2.8s; }
+.hero__tags li:nth-child(9) .hero__tag { animation-delay: 3.2s; }
+
+.hero__tag-fill {
+  position: absolute;
+  inset: 0;
+  background: var(--tag-color);
+  opacity: 0.28;
+  transform: scale(1);
+  border-radius: inherit;
+  animation: tagPulse 3.6s ease-in-out infinite;
+  transition:
+    opacity 0.35s ease,
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hero__tags li:nth-child(odd) .hero__tag-fill { animation-delay: 0.3s; }
+.hero__tags li:nth-child(even) .hero__tag-fill { animation-delay: 1.1s; }
+
+.hero__tag-label {
+  position: relative;
+  z-index: 1;
+  font-size: 0.84rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hero__tag:hover,
+.hero__tag.is-active {
+  animation: none;
+  transform: translateY(-5px) scale(1.06);
+  border-color: transparent;
+  box-shadow:
+    0 14px 32px color-mix(in srgb, var(--tag-color) 38%, transparent),
+    0 4px 12px rgba(31, 27, 23, 0.08);
+}
+
+.hero__tags li:hover,
+.hero__tags li:has(.is-active) {
+  animation-play-state: paused;
+}
+
+.hero__tag:hover .hero__tag-fill,
+.hero__tag.is-active .hero__tag-fill {
+  animation: none;
+  opacity: 0.78;
+  transform: scale(1);
+}
+
+.hero__tag:hover .hero__tag-label,
+.hero__tag.is-active .hero__tag-label {
+  transform: scale(1.03);
+}
+
+.hero__tag.is-active {
+  outline: 1.5px solid color-mix(in srgb, var(--tag-color) 40%, var(--ink));
+  outline-offset: 2px;
+}
+
+.hero__tag:active {
+  transform: translateY(-1px) scale(0.98);
+}
+
+@keyframes tagFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes tagGlow {
+  0%,
+  100% {
+    box-shadow:
+      0 4px 14px rgba(31, 27, 23, 0.06),
+      0 0 0 0 color-mix(in srgb, var(--tag-color) 0%, transparent);
+  }
+  50% {
+    box-shadow:
+      0 8px 22px rgba(31, 27, 23, 0.08),
+      0 0 16px 1px color-mix(in srgb, var(--tag-color) 28%, transparent);
+  }
+}
+
+@keyframes tagPulse {
+  0%,
+  100% {
+    opacity: 0.22;
+  }
+  50% {
+    opacity: 0.48;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__tags li,
+  .hero__tag,
+  .hero__tag-fill,
+  .hero__cta::after {
+    animation: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .nav {
+    padding: 0.95rem 1rem;
+  }
+
+  .nav__brand {
+    font-size: 0.78rem;
+    letter-spacing: 0.26em;
+    text-indent: 0.26em;
+  }
+
+  .nav__login {
+    font-size: 0.75rem;
+    padding: 0.45rem 0.9rem;
+  }
+
+  .hero {
+    min-height: auto;
+  }
+
+  .hero__copy {
+    width: 100%;
+    padding: 5.5rem 1rem 0;
+  }
+
+  .hero__title {
+    white-space: normal;
+    font-size: clamp(1.65rem, 7.2vw, 2.15rem);
+    letter-spacing: 0.02em;
+    max-width: 14em;
+    text-wrap: balance;
+  }
+
+  .hero__subtitle {
+    font-size: 0.98rem;
+    line-height: 1.55;
+    margin-bottom: 1.4rem;
+    max-width: 28em;
+  }
+
+  .hero__cta {
+    width: 100%;
+    max-width: 22rem;
+  }
+
+  .hero__map {
+    margin-top: 1.1rem;
+  }
+
+  .hero__tags {
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 22rem;
+    width: 100%;
+    margin: 1.25rem auto 0;
+    padding: 0;
+    gap: 0.5rem;
+  }
+
+  .hero__tag {
+    padding: 0.5rem 0.9rem;
+  }
+
+  .hero__tag-label {
+    font-size: 0.8rem;
+  }
+
+  /* Feedback tactile (pas de hover sur mobile) */
+  .hero__tag:active {
+    transform: scale(0.96);
+  }
+
+  .hero__tag.is-active {
+    transform: translateY(-3px) scale(1.05);
+  }
+}

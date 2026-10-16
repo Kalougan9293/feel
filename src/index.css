@@ -1,0 +1,85 @@
+:root {
+  --ivory: #f6f1ea;
+  --ivory-soft: #faf7f2;
+  --stone: #8f816f;
+  --bronze: #9a7b55;
+  --ink: #1f1b17;
+  --ink-muted: #6a6258;
+  --line: rgba(31, 27, 23, 0.14);
+  --font-serif: 'Instrument Serif', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
+
+  color: var(--ink);
+  background: var(--ivory);
+  font-family: var(--font-sans);
+  font-weight: 400;
+  line-height: 1.5;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  overflow-x: clip;
+  background-color: #f3eee6;
+  background-image:
+    radial-gradient(ellipse 90% 60% at 12% 8%, rgba(255, 255, 255, 0.7), transparent 55%),
+    radial-gradient(ellipse 70% 50% at 88% 18%, rgba(210, 190, 165, 0.22), transparent 50%),
+    radial-gradient(ellipse 55% 45% at 70% 85%, rgba(255, 252, 247, 0.5), transparent 55%),
+    radial-gradient(ellipse 40% 35% at 20% 75%, rgba(186, 168, 145, 0.12), transparent 60%),
+    linear-gradient(
+      122deg,
+      transparent 0%,
+      transparent 28%,
+      rgba(255, 255, 255, 0.28) 31%,
+      transparent 34%,
+      transparent 58%,
+      rgba(170, 150, 125, 0.1) 61%,
+      transparent 65%,
+      transparent 78%,
+      rgba(255, 255, 255, 0.18) 82%,
+      transparent 86%
+    ),
+    linear-gradient(
+      68deg,
+      transparent 20%,
+      rgba(160, 140, 115, 0.07) 36%,
+      transparent 42%,
+      transparent 70%,
+      rgba(255, 255, 255, 0.14) 76%,
+      transparent 84%
+    ),
+    linear-gradient(180deg, #f7f2eb 0%, #f1ebe2 48%, #ede6db 100%);
+  background-attachment: fixed;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}

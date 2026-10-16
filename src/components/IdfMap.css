@@ -1,0 +1,403 @@
+.idf-map {
+  --pin-color: #e11d2e;
+  width: 100%;
+  padding: 0 clamp(0.5rem, 2vw, 1.5rem) clamp(1rem, 2.5vh, 1.75rem);
+  overflow: visible;
+}
+
+.idf-map__stage {
+  position: relative;
+  /* Fluide : ni trop large desktop, ni trop imposante en hauteur */
+  width: clamp(16.5rem, 38vw + 2rem, 34rem);
+  max-width: min(90vw, 70vh);
+  margin: 0 auto;
+  overflow: visible;
+}
+
+.idf-map__frame {
+  position: relative;
+  width: 100%;
+  border-radius: 14px;
+  overflow: visible;
+  background: #f3e6dc;
+  box-shadow:
+    0 16px 40px rgba(31, 27, 23, 0.1),
+    0 3px 12px rgba(31, 27, 23, 0.05);
+  z-index: 1;
+}
+
+.idf-map__image {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 14px;
+  user-select: none;
+  pointer-events: none;
+}
+
+.idf-map__layer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+/* Leader lines — extend outside the frame */
+.idf-map__svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 3;
+  overflow: visible;
+}
+
+.idf-map__leader {
+  fill: none;
+  stroke: color-mix(in srgb, var(--pin-color) 80%, transparent);
+  stroke-width: 0.3;
+  stroke-linecap: round;
+  transition: stroke 0.45s ease;
+}
+
+/* ——— Push pins ——— */
+.idf-map__ping {
+  position: absolute;
+  width: 36px;
+  height: 44px;
+  transform: translate(-50%, -100%);
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  z-index: 2;
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.idf-map__pin {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 18px;
+  height: 26px;
+  margin-left: -9px;
+  display: block;
+  filter: drop-shadow(0 3px 6px color-mix(in srgb, var(--pin-color) 55%, transparent));
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), filter 0.45s ease;
+  transform-origin: bottom center;
+  animation: pinIdle 2.4s ease-in-out infinite;
+}
+
+.idf-map__ping:nth-child(3n) .idf-map__pin {
+  animation-delay: 0.4s;
+}
+
+.idf-map__ping:nth-child(3n + 1) .idf-map__pin {
+  animation-delay: 0.8s;
+}
+
+.idf-map__ping:nth-child(3n + 2) .idf-map__pin {
+  animation-delay: 1.2s;
+}
+
+.idf-map__pin-head {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 15px;
+  height: 15px;
+  transform: translateX(-50%) rotate(-45deg);
+  border-radius: 50% 50% 50% 0;
+  background:
+    radial-gradient(
+      circle at 32% 28%,
+      color-mix(in srgb, var(--pin-color) 25%, white) 0%,
+      var(--pin-color) 38%,
+      var(--pin-color) 72%,
+      color-mix(in srgb, var(--pin-color) 55%, black) 100%
+    );
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.35),
+    0 0 0 1.5px color-mix(in srgb, var(--pin-color) 55%, white),
+    0 0 10px color-mix(in srgb, var(--pin-color) 45%, transparent);
+  transition: background 0.45s ease, box-shadow 0.45s ease;
+}
+
+.idf-map__pin-head::after {
+  content: '';
+  position: absolute;
+  left: 28%;
+  top: 28%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.idf-map__pin-needle {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 2px;
+  height: 11px;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, #9a9a9a 0%, #d0d0d0 40%, #6a6a6a 100%);
+  border-radius: 1px;
+}
+
+.idf-map__pin-needle::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -2px;
+  width: 0;
+  height: 0;
+  transform: translateX(-50%);
+  border-left: 2px solid transparent;
+  border-right: 2px solid transparent;
+  border-top: 4px solid #555;
+}
+
+.idf-map__ping-halo {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 14px;
+  height: 14px;
+  transform: translate(-50%, 35%);
+  border-radius: 50%;
+  border: 1.5px solid color-mix(in srgb, var(--pin-color) 55%, transparent);
+  background: color-mix(in srgb, var(--pin-color) 18%, transparent);
+  opacity: 0.55;
+  animation: pinHalo 2.2s ease-out infinite;
+  pointer-events: none;
+}
+
+.idf-map__ping:nth-child(3n) .idf-map__ping-halo {
+  animation-delay: 0.35s;
+}
+
+.idf-map__ping:nth-child(3n + 1) .idf-map__ping-halo {
+  animation-delay: 0.7s;
+}
+
+.idf-map__ping:nth-child(3n + 2) .idf-map__ping-halo {
+  animation-delay: 1.05s;
+}
+
+.idf-map__ping.is-active {
+  z-index: 5;
+}
+
+.idf-map__ping.is-active .idf-map__pin {
+  animation: none;
+  transform: scale(1.18) translateY(-3px);
+}
+
+.idf-map__ping.is-active .idf-map__ping-halo {
+  animation: pinHalo 1.4s ease-out infinite;
+  border-color: var(--pin-color);
+  opacity: 0.85;
+}
+
+.idf-map__ping:hover .idf-map__pin,
+.idf-map__ping:focus-visible .idf-map__pin {
+  animation: none;
+  transform: scale(1.14) translateY(-2px);
+}
+
+.idf-map__ping:focus-visible {
+  outline: none;
+}
+
+@keyframes pinIdle {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes pinHalo {
+  0% {
+    opacity: 0.65;
+    transform: translate(-50%, 35%) scale(0.7);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, 35%) scale(2.4);
+  }
+}
+
+/* ——— Cards outside the frame ——— */
+.idf-map__card {
+  position: absolute;
+  z-index: 8;
+  width: min(210px, 38vw);
+  display: grid;
+  grid-template-rows: 88px auto;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(250, 247, 242, 0.97);
+  border: 1px solid rgba(31, 27, 23, 0.08);
+  box-shadow:
+    0 14px 36px rgba(31, 27, 23, 0.14),
+    0 2px 8px rgba(31, 27, 23, 0.06);
+  backdrop-filter: blur(10px);
+  text-align: left;
+  pointer-events: none;
+}
+
+.idf-map__card--left {
+  right: calc(100% + var(--leader-out, 18px));
+  transform-origin: right center;
+}
+
+.idf-map__card--right {
+  left: calc(100% + var(--leader-out, 18px));
+  transform-origin: left center;
+}
+
+.idf-map__card-media {
+  background-size: cover;
+  background-position: center;
+  background-color: #e5ddd0;
+}
+
+.idf-map__card-body {
+  padding: 0.7rem 0.85rem 0.8rem;
+}
+
+.idf-map__card-type {
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #9a7b55;
+  margin-bottom: 0.2rem;
+}
+
+.idf-map__card-title {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  font-weight: 400;
+  line-height: 1.15;
+  color: var(--ink);
+}
+
+.idf-map__card-area {
+  margin-top: 0.15rem;
+  font-size: 0.74rem;
+  color: var(--ink-muted);
+}
+
+.idf-map__card-status {
+  margin-top: 0.35rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: #c41020;
+}
+
+@media (max-width: 1100px) {
+  .idf-map__stage {
+    width: clamp(16rem, 46vw, 30rem);
+    max-width: min(86vw, 62vh);
+  }
+}
+
+@media (max-width: 900px) {
+  .idf-map__stage {
+    width: clamp(15.5rem, 58vw, 26rem);
+    max-width: min(84vw, 58vh);
+  }
+
+  .idf-map__card:not(.idf-map__card--sheet) {
+    width: min(150px, 32vw);
+    grid-template-rows: 66px auto;
+  }
+
+  .idf-map__card--left {
+    right: calc(100% + var(--leader-out, 10px));
+  }
+
+  .idf-map__card--right {
+    left: calc(100% + var(--leader-out, 10px));
+  }
+}
+
+@media (max-width: 720px) {
+  .idf-map {
+    padding: 0 0 1.5rem;
+  }
+
+  .idf-map__stage {
+    width: min(22rem, 88vw);
+    max-width: min(88vw, 52vh);
+  }
+
+  .idf-map__frame {
+    border-radius: 12px;
+  }
+
+  .idf-map__image {
+    border-radius: 12px;
+  }
+
+  .idf-map__ping {
+    width: 40px;
+    height: 48px;
+  }
+
+  .idf-map__pin {
+    width: 20px;
+    height: 28px;
+    margin-left: -10px;
+  }
+
+  .idf-map__pin-head {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* Sheet card under the map */
+  .idf-map__card--sheet {
+    position: relative;
+    left: auto;
+    right: auto;
+    top: auto;
+    width: min(100%, 92vw);
+    margin: 0.9rem auto 0;
+    display: grid;
+    grid-template-columns: 106px 1fr;
+    grid-template-rows: auto;
+    min-height: 106px;
+    pointer-events: auto;
+    transform-origin: center top;
+  }
+
+  .idf-map__card--sheet .idf-map__card-media {
+    min-height: 100%;
+  }
+
+  .idf-map__card--sheet .idf-map__card-body {
+    padding: 0.75rem 0.85rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .idf-map__card--sheet .idf-map__card-title {
+    font-size: 1.1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .idf-map__ping-halo,
+  .idf-map__pin {
+    animation: none;
+  }
+}
